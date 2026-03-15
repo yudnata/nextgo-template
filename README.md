@@ -2,7 +2,7 @@
 
 A modern, production-ready full-stack boilerplate using **Next.js** for the frontend and **Go (Fiber v3)** for the backend. Built with a focus on modularity, scalability, and performance.
 
-## 🚀 Tech Stack
+## Tech Stack
 
 ### Frontend
 - **Framework**: Next.js (App Router)
