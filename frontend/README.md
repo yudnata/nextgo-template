@@ -1,13 +1,13 @@
 # Frontend — Next.js 16
 
-Arsitektur modular dengan **App Router**, **feature-based modules**, dan **centralized design system**.
+A modular architecture using **App Router**, **feature-based modules**, and a **centralized design system**.
 
-## Struktur Direktori
+## Directory Structure
 
 ```
 src/
 ├── app/                          # Next.js App Router (routing only)
-│   ├── (auth)/                   # Route group — URL tanpa /auth prefix
+│   ├── (auth)/                   # Route group — URL without /auth prefix
 │   │   ├── layout.tsx            # Centered auth layout
 │   │   ├── login/page.tsx        # → /login
 │   │   └── register/page.tsx     # → /register
@@ -18,8 +18,8 @@ src/
 │   └── page.tsx                  # Home (/)
 │
 ├── components/                   # Shared reusable components
-│   ├── ui/                       # Primitif: Button, Input, Modal
-│   └── layout/                   # Struktural: Navbar, Sidebar, Footer
+│   ├── ui/                       # Primitives: Button, Input, Modal
+│   └── layout/                   # Structural: Navbar, Sidebar, Footer
 │
 ├── features/                     # Feature modules (domain logic)
 │   └── auth/
@@ -29,12 +29,12 @@ src/
 │       └── hooks/
 │           └── use-auth.ts       # Feature-specific hooks
 │
-├── lib/                          # Core utilities & konfigurasi
-│   ├── api.ts                    # Typed API client ke Go backend
+├── lib/                          # Core utilities & configuration
+│   ├── api.ts                    # Typed API client for Go backend
 │   └── utils.ts                  # Helper functions (cn, formatDate)
 │
 ├── styles/                       # Design system & global CSS
-│   ├── globals.css               # Entry point — import semua CSS
+│   ├── globals.css               # Entry point — imports all CSS
 │   ├── variables.css             # Design tokens (colors, spacing, etc.)
 │   └── components.css            # Base component classes (btn, card, etc.)
 │
@@ -42,30 +42,30 @@ src/
     └── api.d.ts                  # ApiResponse, PaginatedResponse
 ```
 
-## Penjelasan Tiap Layer
+## Layer Explanations
 
 ### `app/` — Routing Only
 
-Hanya berisi `page.tsx`, `layout.tsx`, dan `loading.tsx`. **Tidak boleh** ada business logic di sini.
+Contains only `page.tsx`, `layout.tsx`, and `loading.tsx`. **No business logic** should be placed here.
 
-- Gunakan **route groups** `(auth)`, `(dashboard)` untuk mengelompokkan layout tanpa menambah segment URL.
-- Contoh: `app/(auth)/login/page.tsx` → URL-nya `/login`, bukan `/auth/login`.
+- Use **route groups** `(auth)`, `(dashboard)` to group layouts without adding URL segments.
+- Example: `app/(auth)/login/page.tsx` → URL is `/login`, not `/auth/login`.
 
 ### `components/` — Shared UI
 
-Komponen yang **dipakai di banyak tempat** dan **tidak terikat** ke fitur tertentu.
+Components that are **used in multiple places** and are **not tied** to a specific feature.
 
-| Sub-folder | Isi | Contoh |
-|------------|-----|--------|
-| `ui/` | Primitif murni, tanpa business logic | `Button`, `Input`, `Modal` |
-| `layout/` | Komponen struktural halaman | `Navbar`, `Sidebar`, `Footer` |
+| Sub-folder | Content | Example |
+|------------|---------|---------|
+| `ui/` | Pure primitives, no business logic | `Button`, `Input`, `Modal` |
+| `layout/` | Structural page components | `Navbar`, `Sidebar`, `Footer` |
 
 ### `features/` — Feature Modules
 
-Inti skalabilitas proyek. Setiap fitur punya **folder sendiri** yang berisi semua logic terkait:
+The core of project scalability. Each feature has its **own folder** containing all related logic:
 
 ```
-features/products/          # Contoh fitur baru
+features/products/          # New feature example
 ├── index.ts                # Barrel export
 ├── actions.ts              # Server actions
 ├── types.ts                # Types
@@ -75,43 +75,43 @@ features/products/          # Contoh fitur baru
     └── product-card.tsx    # Feature-specific components
 ```
 
-**Keuntungan**: Hapus 1 fitur = hapus 1 folder. Tidak merusak fitur lain.
+**Advantage**: Deleting 1 feature = deleting 1 folder. It doesn't break other features.
 
 ### `lib/` — Core Utilities
 
-| File | Fungsi |
-|------|--------|
-| `api.ts` | Typed fetch wrapper ke Go backend, dengan base URL dari env |
-| `utils.ts` | Helper: `cn()` (class merge), `formatDate()`, dll. |
+| File | Function |
+|------|----------|
+| `api.ts` | Typed fetch wrapper for the Go backend, with base URL from env |
+| `utils.ts` | Helpers: `cn()` (class merge), `formatDate()`, etc. |
 
 ### `styles/` — Design System
 
-CSS diorganisir dalam 3 file yang di-import secara berurutan:
+CSS is organized into 3 files imported sequentially:
 
-| File | Isi |
-|------|-----|
+| File | Content |
+|------|---------|
 | `variables.css` | Design tokens: colors, typography, spacing, shadows, z-index |
-| `globals.css` | Entry point: import tokens → Tailwind → components → base styles |
+| `globals.css` | Entry point: imports tokens → Tailwind → components → base styles |
 | `components.css` | Reusable CSS classes: `.btn`, `.card`, `.input`, `.badge` |
 
-Import dari `layout.tsx`:
+Imported from `layout.tsx`:
 ```tsx
 import '@/styles/globals.css';
 ```
 
 ### `types/` — Global Types
 
-Tipe TypeScript yang dipakai lintas feature (bukan spesifik ke 1 fitur).
+TypeScript types used across features (not specific to a single feature).
 
 ```ts
 import type { ApiResponse, PaginatedResponse } from '@/types/api';
 ```
 
-## Konvensi
+## Conventions
 
 ### Path Alias
 
-Menggunakan `@/` yang di-mapping ke `./src/*` di `tsconfig.json`:
+Uses `@/` mapped to `./src/*` in `tsconfig.json`:
 
 ```ts
 import { Button } from '@/components/ui/button';
@@ -120,28 +120,28 @@ import { api } from '@/lib/api';
 import { cn } from '@/lib/utils';
 ```
 
-### Penamaan
+### Naming
 
-| Jenis | Format | Contoh |
-|-------|--------|--------|
-| File & folder | `kebab-case` | `user-card.tsx`, `use-auth.ts` |
-| Komponen React | `PascalCase` | `UserCard`, `ProductList` |
+| Type | Format | Example |
+|------|--------|---------|
+| Files & folders | `kebab-case` | `user-card.tsx`, `use-auth.ts` |
+| React Components | `PascalCase` | `UserCard`, `ProductList` |
 | Hooks & utils | `camelCase` | `useAuth`, `formatDate` |
 | Types | `PascalCase` | `AuthUser`, `ApiResponse` |
 
 ### Server vs Client Components
 
-Secara default, semua komponen adalah **Server Components**. Tambahkan `"use client"` di baris pertama jika butuh interaktivitas (`useState`, `useEffect`, event handler).
+By default, all components are **Server Components**. Add `"use client"` at the first line if interactivity is needed (`useState`, `useEffect`, event handlers).
 
 ```tsx
-"use client";  // ← wajib untuk komponen interaktif
+"use client";  // ← Required for interactive components
 
 import { useState } from 'react';
 ```
 
 ### Middleware
 
-`middleware.ts` terletak di root `frontend/` (sejajar `src/`), berfungsi sebagai auth guard global.
+`middleware.ts` is located in the `frontend/` root (parallel to `src/`), acting as a global auth guard.
 
 ```ts
 // frontend/middleware.ts

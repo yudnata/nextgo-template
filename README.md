@@ -1,143 +1,97 @@
-# NextGo Stack Template
+# NextGo Template
 
-Boilerplate modern untuk membangun web app dengan **Next.js 16** (Frontend) dan **Go Fiber** (Backend). Dioptimasi untuk performa, skalabilitas, dan developer experience.
+A modern, production-ready full-stack boilerplate using **Next.js** for the frontend and **Go (Fiber v3)** for the backend. Built with a focus on modularity, scalability, and performance.
 
-## Tech Stack
+## 🚀 Tech Stack
 
-| Layer | Teknologi | Versi |
-|-------|-----------|-------|
-| Frontend | Next.js (App Router) | 16.1.6 |
-| UI Framework | React | 19.2.3 |
-| Styling | Tailwind CSS | 4 |
-| Language | TypeScript | 5 |
-| Backend | Go + Fiber v3 | 1.25.0 |
-| Database | PostgreSQL | 16 |
-| Auth | JWT + Bcrypt | - |
-| SQL Driver | Raw SQL (pgx/v5) | - |
-| Container | Docker Compose | 3.8 |
+### Frontend
+- **Framework**: Next.js (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **State Management**: React 19 Server Actions & Hooks
 
-## Struktur Proyek
+### Backend
+- **Framework**: Go Fiber v3
+- **Database**: PostgreSQL (Raw SQL with pgx/v5)
+- **Auth**: JWT (JSON Web Tokens)
+- **Architecture**: Modular Feature-First / Domain-Driven
 
-```
-nextgo-template/
+### Infrastructure
+- **Containerization**: Docker & Docker Compose
+
+## 📂 Project Structure
+
+```bash
 ├── frontend/                 # Next.js Application
 │   ├── src/
-│   │   ├── app/              # App Router (routing & pages)
-│   │   ├── components/       # Shared reusable components
-│   │   ├── features/         # Feature modules (domain logic)
-│   │   ├── lib/              # Core utilities & API client
-│   │   ├── styles/           # Design system & global CSS
-│   │   └── types/            # Global shared TypeScript types
-│   ├── middleware.ts          # Auth guard & request middleware
-│   ├── next.config.ts
+│   │   ├── app/              # Routes & Layouts
+│   │   ├── components/       # Shared UI components
+│   │   ├── features/         # Feature-based modules (Auth, etc.)
+│   │   ├── lib/              # Utilities & API Client
+│   │   └── types/            # Global TypeScript types
 │   └── package.json
 │
 ├── backend/                  # Go Fiber API (Modular Feature-First)
 │   ├── cmd/main.go           # Entry point
 │   ├── internal/
 │   │   ├── config/           # App configuration
-│   │   ├── database/         # DB Connection & Migrations
+│   │   ├── database/         # Connection & Migrations
 │   │   ├── middleware/       # Shared middleware
-│   │   ├── modules/          # Feature Modules
+│   │   ├── modules/          # Feature Modules (Auth, feature2)
 │   │   │   ├── auth/         # Auth Feature
-│   │   │   │   ├── handler.go
-│   │   │   │   ├── service.go
-│   │   │   │   ├── repository.go
-│   │   │   │   ├── routes.go
-│   │   │   │   └── types.go
-│   │   │   └── feature2/     # Feature 2 (Boilerplate)
-│   │   │       ├── handler.go
-│   │   │       ├── service.go
-│   │   │       ├── repository.go
-│   │   │       ├── routes.go
-│   │   │       └── types.go
+│   │   │   └── feature2/     # Example Feature
 │   │   └── router/           # Global router wiring
 │   ├── pkg/
-│   │   ├── response/         # JSON response helper
-│   │   └── validator/        # Input validation
+│   │   └── response/         # Generic API response helpers
 │   └── go.mod
 │
 └── docker-compose.yml        # Orchestration (App + Postgres)
 ```
 
-> Lihat [frontend/README.md](frontend/README.md) untuk detail arsitektur frontend.
-
-## Kenapa Next.js + Go?
-
-**Next.js** — SSR/SSG untuk SEO dan performa, file-based routing yang clean, dan React Server Components untuk efisiensi rendering.
-
-**Go + Fiber v3** — Compiled langsung ke machine code, goroutines untuk concurrency murah, dan Fiber v3 lebih modern & performant untuk handling API.
-
-**Raw SQL (pgx)** — Kontrol penuh atas query, performa maksimal, dan tanpa overhead dari ORM yang kompleks.
-
-## Quick Start
+## 🛠️ Getting Started
 
 ### Prerequisites
-
+- Node.js (v20+)
+- Go (v1.23+)
 - Docker & Docker Compose
-- Node.js ≥ 18 (rekomendasi 20+)
-- Go ≥ 1.25 (untuk fitur terbaru)
 
-### 1. Clone & Konfigurasi Environment
-
+### 1. Database Setup
+Run the PostgreSQL service using Docker:
 ```bash
-# Backend
-cd backend
-cp .env.example .env
-
-# Frontend
-cd ../frontend
-cp .env.example .env.local
+docker-compose up -d postgres
 ```
 
-### 2. Jalankan dengan Docker (Paling Mudah)
+### 2. Backend Setup
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+2. Copy `.env.example` to `.env` and adjust the values.
+3. Install dependencies and run:
+   ```bash
+   go mod tidy
+   go run cmd/main.go
+   ```
 
-```bash
-docker-compose up --build
-```
+### 3. Frontend Setup
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Run the development server:
+   ```bash
+   npm run dev
+   ```
 
-| Service | URL |
-|---------|-----|
-| Frontend | http://localhost:3000 |
-| Backend API | http://localhost:8080/api/health |
-| Postgres | localhost:5432 |
+## 🔐 Authentication Flow
+1. **Frontend**: Calls Server Actions (`loginAction` / `registerAction`).
+2. **Backend**: Validates credentials and returns a JWT token.
+3. **Storage**: The token is stored in **Secure HTTP-Only Cookies** and `localStorage` via a universal API client.
+4. **Protection**: `middleware.ts` (Next.js) and `AuthRequired` (Go Middleware) protect restricted routes.
 
-### 3. Jalankan Secara Lokal (Development)
-
-**Backend:**
-1. Pastikan PostgreSQL berjalan (bisa pakai docker: `docker run -d --name pg -e POSTGRES_PASSWORD=nextgo_secret -p 5432:5432 postgres:16-alpine`)
-2. `cd backend`
-3. `go mod tidy`
-4. `go run cmd/api/main.go`
-# → Server di port 8080, otomatis migrate table `users`
-
-**Frontend:**
-1. `cd frontend`
-2. `npm install`
-3. `npm run dev`
-# → App di port 3000
-
-## Environment Variables
-
-### Frontend (`frontend/.env.local`)
-```env
-NEXT_PUBLIC_API_URL=http://localhost:8080/api
-NODE_ENV=development
-```
-
-### Backend (`backend/.env`)
-```env
-PORT=8080
-DATABASE_URL=postgres://nextgo:nextgo_secret@localhost:5432/nextgo_db?sslmode=disable
-JWT_SECRET=super_secret_jwt_key
-MODE=development
-```
-
-## Scripts
-
-| Command | Deskripsi |
-|---------|-----------|
-| `npm run dev` | Jalankan dev server |
-| `npm run build` | Build production |
-| `npm run start` | Jalankan production server |
-| `npm run lint` | Jalankan ESLint |
+## 📄 License
+MIT
