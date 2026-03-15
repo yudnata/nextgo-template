@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: nextgo_postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: nextgo
+      POSTGRES_PASSWORD: nextgo_secret
+      POSTGRES_DB: nextgo_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - nextgo-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nextgo_backend
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - DATABASE_URL=postgres://nextgo:nextgo_secret@postgres:5432/nextgo_db?sslmode=disable
+      - JWT_SECRET=super_secret_jwt_key_change_in_production
+      - MODE=development
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - nextgo-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: nextgo_frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8080/api
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - nextgo-network
+
+volumes:
+  postgres_data:
+
+networks:
+  nextgo-network:
+    driver: bridge

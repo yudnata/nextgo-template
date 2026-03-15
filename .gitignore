@@ -1,0 +1,53 @@
+# Environment
+.env
+*.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+vendor/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Next.js & Frontend
+.next/
+out/
+build/
+.next-env.d.ts
+next-env.d.ts
+.vercel
+.turbo
+*.tsbuildinfo
+/coverage
+
+# Go & Backend
+bin/
+dist/
+tmp/
+*.exe
+*.test
+backend/tmp_build.exe
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS & Misc
+.DS_Store
+Thumbs.db
+*.pem
+.docker/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*

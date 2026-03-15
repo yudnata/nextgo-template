@@ -1,0 +1,72 @@
+/* ==========================================================
+   Global Styles — Main Entry Point
+   Import order matters: tokens → tailwind → components → base
+   ========================================================== */
+
+/* 1. Design tokens (CSS variables) */
+@import './variables.css';
+
+/* 2. Tailwind CSS */
+@import 'tailwindcss';
+
+/* 3. Component styles */
+@import './components.css';
+
+/* --- Tailwind v4 theme bridge --- */
+@theme inline {
+  --color-background: var(--color-bg-primary);
+  --color-foreground: var(--color-text-primary);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+/* --- Base styles --- */
+body {
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  border-color: var(--color-border);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* --- Scrollbar styling (Webkit) --- */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-hover);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+/* --- Selection --- */
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+/* --- Focus visible (accessibility) --- */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
